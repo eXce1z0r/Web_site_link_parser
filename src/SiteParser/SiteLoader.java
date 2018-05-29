@@ -20,7 +20,7 @@ public class SiteLoader
 	{
 		double res = 0;	
 		
-		ArrayList<String> allSiteLinks = getAllLinks(load(urlAddress));// equals ArrayList<String> allSiteLinks = new ArrayList<String>(); String siteData = load(urlAddess); allSiteLinks = getAllLinks(siteData);		
+		ArrayList<String> allSiteLinks = getAllLinks(load(urlAddress));
 		HashMap<String, Integer> dataForPRCalc = new HashMap<String, Integer>();
 		
 		StringBuffer linkForSearching = new StringBuffer(urlAddress);
@@ -55,17 +55,9 @@ public class SiteLoader
 			linkForSearching.delete(startRemoveIndex, linkForSearching.length());
 		}
 		
-		//System.out.println("\t After: "+linkForSearching);
-		
-		//System.out.println(linkForSearching.toString());
-		
 		for(String siteLink: allSiteLinks)
 		{
-			
-			//System.out.println("#1 \t"+siteLink);
 			StringBuffer linkToFix = new StringBuffer(siteLink);
-			
-			//System.out.println("BEFORE: "+correctLink);
 			
 			startRemoveIndex = linkToFix.indexOf("http://");
 			if(startRemoveIndex != -1)
@@ -80,7 +72,7 @@ public class SiteLoader
 			}
 			
 			startRemoveIndex = linkToFix.indexOf("//");
-			//System.out.println(startRemoveIndex);
+
 			if(startRemoveIndex != -1)
 			{
 				linkToFix.delete(startRemoveIndex, startRemoveIndex+2);
@@ -93,7 +85,7 @@ public class SiteLoader
 			}
 			
 			startRemoveIndex = linkToFix.indexOf("/");
-			//System.out.println(startRemoveIndex);
+
 			if(startRemoveIndex == 0)
 			{
 				linkToFix.delete(startRemoveIndex, 1);
@@ -104,20 +96,9 @@ public class SiteLoader
 			if(correctLink.indexOf(linkForSearching.toString())!= -1)// checking for links of this domain
 			{
 				dataForPRCalc.put(correctLink, amountReferencesOfCurrentSite(linkForSearching.toString(), correctLink));
-				//System.out.println(correctLink);
 			}
-			//System.out.println("#3");
-			
-			//System.out.println(correctLink);
 		}
 		
-		/*System.out.println("linkForSearching: "+linkForSearching);
-		System.out.println("alreadyCalculatedSites List: \n");
-		for(Entry alreadyCalculatedSite: alreadyCalculatedSites.entrySet())
-		{
-			System.out.println("\t"+alreadyCalculatedSite.getKey());
-		}
-		System.out.println("---------------------");*/
 		
 		if(!alreadyCalculatedSites.containsKey(linkForSearching.toString()))
 		{				
@@ -127,16 +108,10 @@ public class SiteLoader
 			
 			for(Entry site: dataForPRCalc.entrySet())
 			{
-				/*if(siteToStay != null)
-				{
-					if(site.getKey().toString().indexOf(siteToStay) == -1)
-					{
-						continue;
-					}
-				}*/
+				
 				if(Double.parseDouble(site.getValue().toString()) != 0)
 				{
-					//System.out.println(site.getKey().toString());
+					
 					double placeForRecursionVal = countSitePR(site.getKey().toString(), alreadyCalculatedSites, siteToStay);
 					
 					System.out.println("\t"+site.getKey().toString()+": "+placeForRecursionVal);
@@ -146,7 +121,7 @@ public class SiteLoader
 				{
 					System.out.println("\t"+site.getKey().toString()+": 0");
 				}
-				//System.out.println(site.getKey()+": "+site.getValue()+";");
+				
 			}
 			
 			if(dataForPRCalc.size() == 0)
@@ -173,15 +148,10 @@ public class SiteLoader
 	{
 		int res = 0;
 		
-		//System.out.println("#2");
-		
 		ArrayList<String> links = getAllLinks(load(siteForSeeking));
-		
-		//System.out.println("#10");
 		
 		for(String link: links)
 		{
-			//System.out.println(siteForSeeking);
 			if(link.indexOf(currentSite)!=-1)
 			{
 				res++;
@@ -202,8 +172,6 @@ public class SiteLoader
 		
 		String res = "";
 		
-		//System.out.println("#2.1");
-		
 		try 
 		{
 			url = new URL(urlAddress);
@@ -214,28 +182,21 @@ public class SiteLoader
 			e.printStackTrace();
 		}
 		
-		//System.out.println("#2.2");
-		
 		try 
 		{
-			//System.out.println("#2.3.1");
 			con = url.openConnection();
 			
 			con.setConnectTimeout(1000);
-			//con.setReadTimeout(1000);
 			
-			//System.out.println("#2.3.2");
+
 			reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-			//System.out.println("#2.3.3");
 		} 
 		catch (IOException e) // input/output exception
 		{
 			// TODO Auto-generated catch block
 			//e.printStackTrace();
-			//System.out.println("#2.3 error");
 		}
 		
-		//System.out.println("#2.4");
 		
 		if(reader != null)
 		{
@@ -265,8 +226,6 @@ public class SiteLoader
 				e.printStackTrace();
 			}
 		}
-		
-		//System.out.println("#2.9");
 		
 		return res;
 	}
@@ -323,10 +282,8 @@ public class SiteLoader
 		
 		int lineCounter = 0;
 		
-		//System.out.println("#2.1");
 		if(siteDataCode.indexOf("\n", currLineBeginIndex)!= -1)
 		{
-			//System.out.println("#3.0");
 			while((line = siteDataCode.substring(currLineBeginIndex, (currLineEndIndex=siteDataCode.indexOf("\n", currLineBeginIndex))))!=null)
 			{
 				//Parsing BEGIN
@@ -350,15 +307,8 @@ public class SiteLoader
 						
 						currLinkBeginIndex = line.indexOf(referenceMark, currLinkBeginIndex);
 						
-						//System.out.println("Line number: "+lineCounter);
-						
-						//System.out.println(currLinkBeginIndex+") "+referenceMark+": \n\t"+line);
 						if(currLinkBeginIndex != -1)
-						{
-							//System.out.println("Line number: "+lineCounter);
-							
-							//System.out.println(currLinkBeginIndex);
-						
+						{						
 							int refEndMarkV1 = line.indexOf("\'", currLinkBeginIndex);
 							int refEndMarkV2 = line.indexOf("\"", currLinkBeginIndex);
 							
@@ -397,7 +347,6 @@ public class SiteLoader
 							try
 							{
 								link = line.substring(currLinkBeginIndex, currLinkEndIndex);
-								//System.out.println("\tcurrLinkBeginIndex: "+currLinkBeginIndex+";\n"+"\tcurrLinkEndIndex: "+currLinkEndIndex+";");
 							}
 							catch(StringIndexOutOfBoundsException e)
 							{
@@ -407,15 +356,6 @@ public class SiteLoader
 								System.out.println("currLinkEndIndex= "+ currLinkEndIndex);
 								System.exit(0);
 							}
-							
-							//System.out.println("Links:\n"+"\t"+link);
-							
-							/*try {
-								Thread.sleep(1000);
-							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}*/
 							
 							//Check on ignore symbols BEGIN
 							if(link.length()>3)
@@ -429,7 +369,6 @@ public class SiteLoader
 								{
 									forStrCheck = link.substring(currRefMarkLength, currRefMarkLength+1);
 								}
-								//System.out.println("forStrCheck:"+ forStrCheck);
 									
 								for(String ignoreSymb :ignoreRefsWithSymbAtBegining)		
 								{
@@ -461,32 +400,19 @@ public class SiteLoader
 								{
 									currLinkBeginIndex++;
 								}
-								/*else
-								{
-									currLineLinkSeekerFlag = false;
-									break;
-								}*/
 							}
 							else
 							{
 								currLineLinkSeekerFlag = false;
 							}
-							//System.out.println("#3");
 						}
 						else
 						{
 							currLineLinkSeekerFlag = false;
 						}
-						//System.out.println("#3.1");
-						//System.out.println("#4");
 					}
-					//System.out.println("#3.2");
-					//System.out.println("#5");
 				}
-				//System.out.println("#6");
-				
-				
-				//links.add(line);			
+						
 				
 				//Parsing ENDS
 				currLineBeginIndex = currLineEndIndex;
@@ -500,7 +426,6 @@ public class SiteLoader
 					break;
 				}
 			}
-			//System.out.println("#3.3");
 		}
 		
 		return links;
